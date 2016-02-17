@@ -25,8 +25,8 @@ class Livy(object):
     def install(self, mode):
         if self.is_installed():
             return
-        jujuresources.install(self.resources['spark'],
-                              destination=self.dist_config.path('spark'),
+        jujuresources.install(self.resources['livy'],
+                              destination=self.dist_config.path('livy'),
                               skip_top_level=True)
 
         default_conf = self.dist_config.path('livy') / 'conf'

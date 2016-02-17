@@ -22,19 +22,19 @@ class Livy(object):
     def is_installed(self):
           return unitdata.kv().get('livy.installed')
 
-    def install(self, mode):
+    def install(selfe):
         if self.is_installed():
             return
-        jujuresources.install(self.resources['spark'],
-                              destination=self.dist_config.path('spark'),
+        jujuresources.install(self.resources['livy'],
+                              destination=self.dist_config.path('livy'),
                               skip_top_level=True)
 
-        default_conf = self.dist_config.path('livy') / 'conf'
-        livy_conf = self.dist_config.path('livy_conf')
-        livy_conf.rmtree_p()
-        default_conf.copytree(livy_conf)
-        default_conf.rmtree_p()
-        livy_conf.symlink(default_conf)
+        #default_conf = self.dist_config.path('livy') / 'conf'
+        #livy_conf = self.dist_config.path('livy_conf')
+        #livy_conf.rmtree_p()
+        #default_conf.copytree(livy_conf)
+        #default_conf.rmtree_p()
+        #livy_conf.symlink(default_conf)
 
         livy_bin = self.dist_config.path('livy') / 'bin'
         with utils.environment_edit_in_place('/etc/environment') as env:
@@ -52,12 +52,14 @@ class Livy(object):
         call(cmd.split())
         cmd = "chown -R ubuntu:hadoop {}".format(self.dist_config.path('livy_conf'))
         call(cmd.split())
-        unitdata.kv().set('livy.installed')
+        unitdata.kv().set('livy.installed', True)
 
-    def configure(self):
-        livy_conf = self.dist_config.path('livy_conf') / 'livy-defaults.conf'
+    def configure(self, mode):
+        livy_conf = self.dist_config.path('livy') / 'livy-defaults.conf'
         if not livy_conf.exists():
-            (self.dist_config.path('livy_conf') / 'livy-defaults.conf.template').copy(livy_conf)
+            (self.dist_config.path('livy') / 'livy-defaults.conf.template').copy(livy_conf)
+            etc_conf = self.dist_config.path('livy_conf') / 'livy-defaults.conf'
+            etc_conf.symlink(livy_conf)
         if mode == 'yarn-client':
             spark_mode = 'yarn'
         else:

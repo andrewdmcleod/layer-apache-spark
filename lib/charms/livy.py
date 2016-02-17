@@ -17,15 +17,15 @@ class Livy(object):
         self.resources = {
             'livy': 'livy-%s' % utils.cpu_arch(),
         }
-      self.verify_resources = utils.verify_resources(*self.resources.values())
+        self.verify_resources = utils.verify_resources(*self.resources.values())
 
     def install(self):
         default_conf = self.dist_config.path('livy') / 'conf'
         livy_conf = self.dist_config.path('livy_conf')
         livy_conf.rmtree_p()
         default_conf.copytree(livy_conf)
-          livy_bin = self.dist_config.path('livy') / 'bin'
-          with utils.environment_edit_in_place('/etc/environment') as env:
+        livy_bin = self.dist_config.path('livy') / 'bin'
+        with utils.environment_edit_in_place('/etc/environment') as env:
             if livy_bin not in env['PATH']:
                 env['PATH'] = ':'.join([env['PATH'], livy_bin])
             hadoop_cp = '/etc/hadoop/conf:/usr/lib/hadoop/share/hadoop/common/lib/*:/usr/lib/hadoop/share/hadoop/common/*\

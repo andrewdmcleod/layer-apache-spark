@@ -19,15 +19,30 @@ class Livy(object):
         }
         self.verify_resources = utils.verify_resources(*self.resources.values())
 
-    def install(self):
+    def install(self, mode):
         default_conf = self.dist_config.path('livy') / 'conf'
         livy_conf = self.dist_config.path('livy_conf')
         livy_conf.rmtree_p()
-        default_conf.copytree(livy_conf)
+        default_conf.copytree(livy_conf) 
+        default_conf.rmtree_p()
+        livy_conf.symlink(default_conf)
+        
+        livy_conf = self.dist_config.path('livy_conf') / 'livy-defaults.conf'
+        if not livy_env.exists():
+            (self.dist_config.path('livy_conf') / 'livy-defaults.conf.template').copy(livy_conf)
+        if mode: 
+            spark_mode = 'yarn'
+        else:
+            spark_mode = 'process'
+        utils.re_edit_in_place(livy_conf, {
+            r'.*livy.server.session.factory *.*': 'livy.server.session.factory =' + spark_mode,
+            })
+
         livy_bin = self.dist_config.path('livy') / 'bin'
         with utils.environment_edit_in_place('/etc/environment') as env:
             if livy_bin not in env['PATH']:
                 env['PATH'] = ':'.join([env['PATH'], livy_bin])
+            # Following classpath comes from `hadoop classpath` and should be fixed
             hadoop_cp = '/etc/hadoop/conf:/usr/lib/hadoop/share/hadoop/common/lib/*:/usr/lib/hadoop/share/hadoop/common/*\
 :/usr/lib/hadoop/share/hadoop/hdfs:/usr/lib/hadoop/share/hadoop/hdfs/lib/*\
 :/usr/lib/hadoop/share/hadoop/hdfs/*:/usr/lib/hadoop/share/hadoop/yarn/lib/*\
@@ -35,9 +50,9 @@ class Livy(object):
 :/usr/lib/hadoop/share/hadoop/mapreduce/*:/usr/lib/hadoop/contrib/capacity-scheduler/*.jar'
             env['CLASSPATH'] = hadoop_cp
 
-        cmd = "chown -R hue:hadoop {}".format(self.dist_config.path('livy'))
+        cmd = "chown -R ubuntu:hadoop {}".format(self.dist_config.path('livy'))
         call(cmd.split())
-        cmd = "chown -R hue:hadoop {}".format(self.dist_config.path('livy_conf'))
+        cmd = "chown -R ubuntu:hadoop {}".format(self.dist_config.path('livy_conf'))
         call(cmd.split())
 
     def start(self):

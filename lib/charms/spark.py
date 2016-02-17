@@ -84,7 +84,8 @@ class Spark(object):
         utils.re_edit_in_place(spark_log4j, {
             r'log4j.rootCategory=INFO, console': 'log4j.rootCategory=ERROR, console',
         })
-        Livy.install()
+        mode = self.is_spark_local()
+        Livy.install(mode)
 
     def install_demo(self):
         '''

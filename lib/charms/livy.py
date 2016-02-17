@@ -19,24 +19,22 @@ class Livy(object):
         }
         self.verify_resources = utils.verify_resources(*self.resources.values())
 
+    def is_installed(self):
+          return unitdata.kv().get('livy.installed')
+
     def install(self, mode):
+        if self.is_installed():
+            return
+        jujuresources.install(self.resources['spark'],
+                              destination=self.dist_config.path('spark'),
+                              skip_top_level=True)
+
         default_conf = self.dist_config.path('livy') / 'conf'
         livy_conf = self.dist_config.path('livy_conf')
         livy_conf.rmtree_p()
-        default_conf.copytree(livy_conf) 
+        default_conf.copytree(livy_conf)
         default_conf.rmtree_p()
         livy_conf.symlink(default_conf)
-        
-        livy_conf = self.dist_config.path('livy_conf') / 'livy-defaults.conf'
-        if not livy_conf.exists():
-            (self.dist_config.path('livy_conf') / 'livy-defaults.conf.template').copy(livy_conf)
-        if mode == 'yarn-client': 
-            spark_mode = 'yarn'
-        else:
-            spark_mode = 'process'
-        utils.re_edit_in_place(livy_conf, {
-            r'.*livy.server.session.factory *.*': 'livy.server.session.factory =' + spark_mode,
-            })
 
         livy_bin = self.dist_config.path('livy') / 'bin'
         with utils.environment_edit_in_place('/etc/environment') as env:
@@ -54,6 +52,19 @@ class Livy(object):
         call(cmd.split())
         cmd = "chown -R ubuntu:hadoop {}".format(self.dist_config.path('livy_conf'))
         call(cmd.split())
+        unitdata.kv().set('livy.installed')
+
+    def configure(self):
+        livy_conf = self.dist_config.path('livy_conf') / 'livy-defaults.conf'
+        if not livy_conf.exists():
+            (self.dist_config.path('livy_conf') / 'livy-defaults.conf.template').copy(livy_conf)
+        if mode == 'yarn-client':
+            spark_mode = 'yarn'
+        else:
+            spark_mode = 'process'
+        utils.re_edit_in_place(livy_conf, {
+            r'.*livy.server.session.factory *.*': 'livy.server.session.factory =' + spark_mode,
+            })
 
     def start(self):
         if not utils.jps("Main"):

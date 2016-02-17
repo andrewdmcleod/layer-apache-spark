@@ -183,6 +183,11 @@ class Spark(object):
             r'.*SPARK_WORKER_DIR.*': 'SPARK_WORKER_DIR={}'.format(self.dist_config.path('spark_work')),
             })
 
+        # update livy config
+
+        livy = Livy(get_dist_config())
+        livy.configure()
+
         # manage SparkBench
         install_sb = hookenv.config()['spark_bench_enabled']
         sb_dir = '/home/ubuntu/spark-bench'

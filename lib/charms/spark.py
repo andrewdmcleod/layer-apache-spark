@@ -1,7 +1,7 @@
 from glob import glob
 from path import Path
 from subprocess import CalledProcessError
-from charms.spark import Livy
+from charms.livy import Livy
 import jujuresources
 from charmhelpers.core import hookenv
 from charmhelpers.core import host

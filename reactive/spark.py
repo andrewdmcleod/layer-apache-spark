@@ -87,6 +87,21 @@ def client_should_stop(client):
     client.clear_installed()
 
 
+@when('spark.started', 'rest_client.related')
+def rest_client_present(client):
+    client.set_installed()
+    spark = Spark(get_dist_config())
+    rest_port = spark.port('livy')
+    client.send_rest_port(rest_port)
+
+
+@when('rest_client.related')
+@when_not('spark.started')
+def rest_client_gone(client):
+    client.rest_clearinstalled()
+
+
+
 @when('benchmark.related')
 def register_benchmarks(benchmark):
     benchmarks = ['sparkpi']

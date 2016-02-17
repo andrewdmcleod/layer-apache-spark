@@ -5,6 +5,9 @@ options:
       - 'ipython'
       - 'libgfortran3'
       - 'scala'
+    users:
+        hue:
+            groups: ['hadoop']
     dirs:
       spark:
         path: '/usr/lib/spark'
@@ -18,7 +21,19 @@ options:
         path: '/var/lib/spark/work'
         owner: 'ubuntu'
         group: 'hadoop'
-    ports:
+      livy:
+        path: '/usr/lib/livy'
+        owner: 'ubuntu'
+        group: 'hadoop'
+      livy_conf:
+        path: '/etc/livy/conf'
+        owner: 'ubuntu'
+        group: 'hadoop'
+      livy_logs:
+        path: '/var/log/livy'
+        owner: 'ubuntu'
+        group: 'hadoop'
+   ports:
       # Ports that need to be exposed, overridden, or manually specified.
       # Only expose ports serving a UI or external API (i.e., namenode and
       # resourcemanager).  Communication among units within the cluster does
@@ -29,3 +44,7 @@ options:
       spark-webui:
         port: 8080
         exposed_on: 'spark'
+      livy:
+        port: 8998 
+        exposed_on: 'spark'
+ 

@@ -11,3 +11,5 @@ provides:
     interface: benchmark
   client:
     interface: spark
+  rest_client:
+    interface: livy

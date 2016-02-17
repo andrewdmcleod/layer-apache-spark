@@ -9,3 +9,7 @@ optional_resources:
     url: https://s3.amazonaws.com/jujubigdata/apache/x86_64/spark-1.4.1-bin-hadoop2.6-x86_64-9cde9534.tgz
     hash: 9cde95349cccfeb99643d2dadb63f8e88ac355e0038aae7d5029142ce94ae370
     hash_type: sha256
+  livy-x86_64:
+    url: https://s3.amazonaws.com/jujubigdata/apache/x86_64/spark-141-livy-c0de272.tgz
+    hash: c0de2728e67920b05385b6414a1d81317418092a48092fcbd1c412cf9ea16c5368c8efb70faf36ee76301838b3478e9995af688ad09c3162acafcd88e50e4e4a
+    hash_type: sha512

@@ -1,7 +1,7 @@
 from glob import glob
 from path import Path
 from subprocess import CalledProcessError
-
+from charms.spark import Livy
 import jujuresources
 from charmhelpers.core import hookenv
 from charmhelpers.core import host
@@ -84,6 +84,7 @@ class Spark(object):
         utils.re_edit_in_place(spark_log4j, {
             r'log4j.rootCategory=INFO, console': 'log4j.rootCategory=ERROR, console',
         })
+        Livy.install()
 
     def install_demo(self):
         '''

@@ -88,17 +88,18 @@ def client_should_stop(client):
 
 
 @when('spark.started', 'rest_client.related')
+@when(not('rest_client.configured')
 def rest_client_present(client):
-    client.set_installed()
     spark = Spark(get_dist_config())
     rest_port = spark.port('livy')
     client.send_rest_port(rest_port)
+    set_state('rest_client.configured')
 
 
-@when('rest_client.related')
+@when('rest_client.related', 'rest_client.configured'))
 @when_not('spark.started')
 def rest_client_gone(client):
-    client.rest_clearinstalled()
+    remove_state('rest_client.configured')
 
 
 

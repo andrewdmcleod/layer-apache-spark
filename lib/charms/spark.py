@@ -84,10 +84,10 @@ class Spark(object):
         utils.re_edit_in_place(spark_log4j, {
             r'log4j.rootCategory=INFO, console': 'log4j.rootCategory=ERROR, console',
         })
-        mode = hookenv.config()['spark_execution_mode']
         dist = get_dist_config()
         livy = Livy(dist)
-        livy.install(mode)
+        if livy.verify_resources():
+            livy.install()
 
     def install_demo(self):
         '''
@@ -185,8 +185,9 @@ class Spark(object):
 
         # update livy config
 
+        mode = hookenv.config()['spark_execution_mode']
         livy = Livy(get_dist_config())
-        livy.configure()
+        livy.configure(mode)
 
         # manage SparkBench
         install_sb = hookenv.config()['spark_bench_enabled']

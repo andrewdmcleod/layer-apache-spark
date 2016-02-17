@@ -96,7 +96,7 @@ def rest_client_present(client):
     set_state('rest_client.configured')
 
 
-@when('rest_client.related', 'rest_client.configured'))
+@when('rest_client.related', 'rest_client.configured')
 @when_not('spark.started')
 def rest_client_gone(client):
     remove_state('rest_client.configured')

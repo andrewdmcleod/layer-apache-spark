@@ -8,7 +8,7 @@ from charmhelpers.core import host
 from charmhelpers.core import unitdata
 from charmhelpers.fetch.archiveurl import ArchiveUrlFetchHandler
 from jujubigdata import utils
-
+from charms.hadoop import get_dist_config
 
 # Main Spark class for callbacks
 class Spark(object):
@@ -84,8 +84,10 @@ class Spark(object):
         utils.re_edit_in_place(spark_log4j, {
             r'log4j.rootCategory=INFO, console': 'log4j.rootCategory=ERROR, console',
         })
-        mode = self.is_spark_local()
-        Livy.install(mode)
+        mode = hookenv.config()['spark_execution_mode']
+        dist = get_dist_config()
+        livy = Livy(dist)
+        livy.install(mode)
 
     def install_demo(self):
         '''

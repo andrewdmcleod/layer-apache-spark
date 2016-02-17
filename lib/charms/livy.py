@@ -1,7 +1,7 @@
 from glob import glob
 from path import Path
-from subprocess import CalledProcessError
-
+from subprocess import CalledProcessError, call
+import os
 import jujuresources
 from charmhelpers.core import hookenv
 from charmhelpers.core import host
@@ -28,9 +28,9 @@ class Livy(object):
         livy_conf.symlink(default_conf)
         
         livy_conf = self.dist_config.path('livy_conf') / 'livy-defaults.conf'
-        if not livy_env.exists():
+        if not livy_conf.exists():
             (self.dist_config.path('livy_conf') / 'livy-defaults.conf.template').copy(livy_conf)
-        if mode: 
+        if mode == 'yarn-client': 
             spark_mode = 'yarn'
         else:
             spark_mode = 'process'
@@ -62,7 +62,7 @@ class Livy(object):
             # chdir here because things like zepp tutorial think ZEPPELIN_HOME
             # is wherever the daemon was started from.
             os.chdir(livy_home)
-            utils.run_as('hue', './bin/livy-server', '2>&1', livy_log, '&' )
+            utils.run_as('hue', './bin/livy-server', '2>&1', livy_log, '&')
 
     def stop(self):
         livy_conf = self.dist_config.path('livy_conf')

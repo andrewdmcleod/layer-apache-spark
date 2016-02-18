@@ -81,8 +81,9 @@ class Livy(object):
     def stop(self):
         try:
             utils.run_as('ubuntu', 'pkill', '-f', 'livy')
-        except:
-            return
+        except CalledProcessError as e:
+            msg = str(e.output), str(e.returncode)
+            hookenv.log("Error stopping livy: " + str(msg))
 
     def open_ports(self):
         for port in self.dist_config.exposed_ports('livy'):

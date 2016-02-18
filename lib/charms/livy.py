@@ -79,7 +79,10 @@ class Livy(object):
             utils.run_as('ubuntu', './bin/livy-server', '2>&1', livy_log, '&')
 
     def stop(self):
-        utils.run_as('ubuntu', 'pkill', '-f', 'livy')
+        try:
+            utils.run_as('ubuntu', 'pkill', '-f', 'livy')
+        except:
+            return
 
     def open_ports(self):
         for port in self.dist_config.exposed_ports('livy'):

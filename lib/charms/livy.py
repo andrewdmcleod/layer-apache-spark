@@ -69,7 +69,9 @@ class Livy(object):
             # chdir here because things like zepp tutorial think ZEPPELIN_HOME
             # is wherever the daemon was started from.
             os.chdir(livy_home)
-            utils.run_as('ubuntu', './bin/livy-server', '2>&1', livy_log, '&')
+            #utils.run_as('ubuntu', './bin/livy-server', '2>&1', livy_log, '&')
+            #utils.run_as('ubuntu', './bin/livy-server', '&')
+            os.system("su ubuntu -c \"./bin/livy-server 2>&1 > livy_log &\"")
 
     def stop(self):
         try:

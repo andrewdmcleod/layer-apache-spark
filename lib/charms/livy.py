@@ -60,7 +60,7 @@ class Livy(object):
             (self.dist_config.path('livy') / 'livy-defaults.conf.template').copy(livy_conf)
         etc_conf = self.dist_config.path('livy_conf') / 'livy-defaults.conf'
         if not etc_conf.exists():
-            etc_conf.symlink(livy_conf)
+            livy_conf.symlink(etc_conf)
         if mode == 'yarn-client':
             spark_mode = 'yarn'
         else:
@@ -76,12 +76,10 @@ class Livy(object):
             # chdir here because things like zepp tutorial think ZEPPELIN_HOME
             # is wherever the daemon was started from.
             os.chdir(livy_home)
-            utils.run_as('hue', './bin/livy-server', '2>&1', livy_log, '&')
+            utils.run_as('ubuntu', './bin/livy-server', '2>&1', livy_log, '&')
 
     def stop(self):
-        livy_conf = self.dist_config.path('livy_conf')
-        livy_home = self.dist_config.path('livy')
-        utils.run_as('hue', 'pgrep', '-f', 'livy', '|xargs', 'kill', '-9')
+        utils.run_as('ubuntu', 'pkill', '-f', 'livy')
 
     def open_ports(self):
         for port in self.dist_config.exposed_ports('livy'):

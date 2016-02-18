@@ -78,8 +78,8 @@ def stop_spark():
 
 @when('spark.started', 'client.joined')
 def client_present(client):
-    spark = Spark(get_dist_config())
-    rest_port = spark.port('livy')
+    dist = get_dist_config()
+    rest_port = dist.port('livy')
     client.send_rest_port(rest_port)
     client.set_spark_started()
 
@@ -88,21 +88,6 @@ def client_present(client):
 @when_not('spark.started')
 def client_should_stop(client):
     client.clear_spark_started()
-
-#@when('spark.started', 'rest_client.related')
-#@when_not('rest_client.configured')
-#def rest_client_present(client):
-#    spark = Spark(get_dist_config())
-#    rest_port = spark.port('livy')
-#    client.send_rest_port(rest_port)
-#    set_state('rest_client.configured')
-
-
-#@when('rest_client.related', 'rest_client.configured')
-#@when_not('spark.started')
-#def rest_client_gone(client):
-#    remove_state('rest_client.configured')
-
 
 
 @when('benchmark.related')

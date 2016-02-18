@@ -59,13 +59,14 @@ class Livy(object):
         if not livy_conf.exists():
             (self.dist_config.path('livy') / 'livy-defaults.conf.template').copy(livy_conf)
             etc_conf = self.dist_config.path('livy_conf') / 'livy-defaults.conf'
+        if not etc_conf.exists():
             etc_conf.symlink(livy_conf)
         if mode == 'yarn-client':
             spark_mode = 'yarn'
         else:
             spark_mode = 'process'
         utils.re_edit_in_place(livy_conf, {
-            r'.*livy.server.session.factory *.*': 'livy.server.session.factory =' + spark_mode,
+            r'.*livy.server.session.factory =*.*': 'livy.server.session.factory = ' + spark_mode,
             })
 
     def start(self):

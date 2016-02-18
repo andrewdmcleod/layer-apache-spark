@@ -242,6 +242,8 @@ class Spark(object):
         if hookenv.config()['spark_execution_mode'] == 'standalone':
             utils.run_as('ubuntu', '{}/sbin/start-master.sh'.format(spark_home))
             utils.run_as('ubuntu', '{}/sbin/start-slave.sh'.format(spark_home), self.get_master())
+        livy = Livy(get_dist_config())
+        livy.start()
 
     def stop(self):
         if not unitdata.kv().get('spark.installed', False):
@@ -254,3 +256,7 @@ class Spark(object):
             utils.run_as('ubuntu', '{}/sbin/stop-master.sh'.format(spark_home))
         if utils.jps("Worker"):
             utils.run_as('ubuntu', '{}/sbin/stop-slave.sh'.format(spark_home))
+        livy = Livy(get_dist_config())
+        livy.stop()
+
+

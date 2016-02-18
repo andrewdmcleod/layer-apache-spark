@@ -29,13 +29,6 @@ class Livy(object):
                               destination=self.dist_config.path('livy'),
                               skip_top_level=True)
 
-        #default_conf = self.dist_config.path('livy') / 'conf'
-        #livy_conf = self.dist_config.path('livy_conf')
-        #livy_conf.rmtree_p()
-        #default_conf.copytree(livy_conf)
-        #default_conf.rmtree_p()
-        #livy_conf.symlink(default_conf)
-
         livy_bin = self.dist_config.path('livy') / 'bin'
         with utils.environment_edit_in_place('/etc/environment') as env:
             if livy_bin not in env['PATH']:
@@ -55,9 +48,9 @@ class Livy(object):
         unitdata.kv().set('livy.installed', True)
 
     def configure(self, mode):
-        livy_conf = self.dist_config.path('livy') / 'livy-defaults.conf'
+        livy_conf = self.dist_config.path('livy') / 'conf/livy-defaults.conf'
         if not livy_conf.exists():
-            (self.dist_config.path('livy') / 'livy-defaults.conf.template').copy(livy_conf)
+            (self.dist_config.path('livy') / 'conf/livy-defaults.conf.template').copy(livy_conf)
         etc_conf = self.dist_config.path('livy_conf') / 'livy-defaults.conf'
         if not etc_conf.exists():
             livy_conf.symlink(etc_conf)
@@ -66,7 +59,7 @@ class Livy(object):
         else:
             spark_mode = 'process'
         utils.re_edit_in_place(livy_conf, {
-            r'.*livy.server.session.factory =*.*': 'livy.server.session.factory = ' + spark_mode,
+            r'.*livy.server.session.factory =*.*': '  livy.server.session.factory = ' + spark_mode,
             })
 
     def start(self):

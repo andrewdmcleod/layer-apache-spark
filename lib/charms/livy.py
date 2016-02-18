@@ -58,7 +58,7 @@ class Livy(object):
         livy_conf = self.dist_config.path('livy') / 'livy-defaults.conf'
         if not livy_conf.exists():
             (self.dist_config.path('livy') / 'livy-defaults.conf.template').copy(livy_conf)
-            etc_conf = self.dist_config.path('livy_conf') / 'livy-defaults.conf'
+        etc_conf = self.dist_config.path('livy_conf') / 'livy-defaults.conf'
         if not etc_conf.exists():
             etc_conf.symlink(livy_conf)
         if mode == 'yarn-client':

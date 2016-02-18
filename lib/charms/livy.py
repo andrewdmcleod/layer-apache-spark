@@ -71,7 +71,7 @@ class Livy(object):
 
     def start(self):
         if not utils.jps("Main"):
-            livy_log = self.dist_config.path('livy_logs') + 'livy-server.log'
+            livy_log = self.dist_config.path('livy_logs') / 'livy-server.log'
             livy_home = self.dist_config.path('livy')
             # chdir here because things like zepp tutorial think ZEPPELIN_HOME
             # is wherever the daemon was started from.
@@ -81,7 +81,7 @@ class Livy(object):
     def stop(self):
         livy_conf = self.dist_config.path('livy_conf')
         livy_home = self.dist_config.path('livy')
-        utils.run_as('hue', 'pkill', '-9', '-u', 'hue')
+        utils.run_as('hue', 'pgrep', '-f', 'livy', '|xargs', 'kill', '-9')
 
     def open_ports(self):
         for port in self.dist_config.exposed_ports('livy'):

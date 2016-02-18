@@ -22,7 +22,7 @@ class Livy(object):
     def is_installed(self):
           return unitdata.kv().get('livy.installed')
 
-    def install(selfe):
+    def install(self):
         if self.is_installed():
             return
         jujuresources.install(self.resources['livy'],

@@ -10,6 +10,6 @@ optional_resources:
     hash: 9cde95349cccfeb99643d2dadb63f8e88ac355e0038aae7d5029142ce94ae370
     hash_type: sha256
   livy-x86_64:
-    url: https://s3.amazonaws.com/jujubigdata/apache/x86_64/spark-141-livy-c0de272.tgz
-    hash: c0de2728e67920b05385b6414a1d81317418092a48092fcbd1c412cf9ea16c5368c8efb70faf36ee76301838b3478e9995af688ad09c3162acafcd88e50e4e4a
+    url: https://s3.amazonaws.com/jujubigdata/apache/x86_64/spark-141-livy-42c8907.tgz
+    hash: 42c8907cf669d6fdfcf03e212216a404eb22e1d0134fbd9c13fdb7cdc8c03b7bca99a27e7e080ae430486dea64fae4bca523a91c59a53e0394ddef6ff0465ad0
     hash_type: sha512

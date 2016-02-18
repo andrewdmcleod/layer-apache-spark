@@ -27,7 +27,7 @@ class Livy(object):
             return
         jujuresources.install(self.resources['livy'],
                               destination=self.dist_config.path('livy'),
-                              skip_top_level=True)
+                              skip_top_level=False)
 
         livy_bin = self.dist_config.path('livy') / 'bin'
         with utils.environment_edit_in_place('/etc/environment') as env:

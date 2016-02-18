@@ -78,7 +78,7 @@ def stop_spark():
 
 @when('spark.started', 'client.joined')
 def client_present(client):
-    spark = SPark(get_dist_config())
+    spark = Spark(get_dist_config())
     rest_port = spark.port('livy')
     client.send_rest_port(rest_port)
     client.set_spark_started()

@@ -16,6 +16,7 @@ class Spark(object):
         self.dist_config = dist_config
         self.resources = {
             'spark': 'spark-%s' % utils.cpu_arch(),
+            'livy': 'livy-%s' % utils.cpu_arch(),
         }
         self.verify_resources = utils.verify_resources(*self.resources.values())
 
@@ -86,8 +87,7 @@ class Spark(object):
         })
         dist = get_dist_config()
         livy = Livy(dist)
-        if livy.verify_resources():
-            livy.install()
+        livy.install()
 
     def install_demo(self):
         '''
